@@ -1,0 +1,11 @@
+##Build Image that includes app war
+docker image build -f Dockerfile.Build -t multistageant11 https://github.com/gtqzkom/SampleAntApp.git
+
+## Build image that has tomcat to run the app 
+docker image build -f Dockerfile.Deploy -t ant11deploy .
+
+##Run the tomcat image
+docker run -it --rm -p 8080:8080 --name sampleapp ant11deploy
+
+##Test the application
+http://localhost:8080/AntExample/

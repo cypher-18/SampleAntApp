@@ -1,7 +1,5 @@
-FROM openjdk:8
-
+FROM openjdk:8 AS builder
 LABEL maintainer="Abhijith.Komalachery@csaa.com"
-
 # Installs Ant
 ENV ANT_VERSION 1.10.5
 RUN cd && \
@@ -11,9 +9,10 @@ RUN cd && \
     rm apache-ant-${ANT_VERSION}-bin.tar.gz
 ENV ANT_HOME /opt/ant
 ENV PATH ${PATH}:/opt/ant/bin
-
 COPY . src/
-
 WORKDIR src/
-
 RUN ant war -buildfile build.xml
+
+FROM java:8-jdk-alpine  AS packager
+WORKDIR /static
+COPY --from=0 /src/dist/AntExample.war .
